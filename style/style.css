@@ -1,0 +1,43 @@
+﻿        body {
+            font-family: sans-serif;
+            font-family: Verdana;
+        }
+
+        a:link {
+            text-decoration: none; color:blue;
+        }
+        a:visited {
+            text-decoration: none; color:blue;
+        }
+
+.menu {
+    background: lightgrey;
+    padding: 5px;
+    z-index: 100;
+    position: fixed;
+    display: none;
+}
+.menuEdit {
+    background-color: rgba(0,0,0,.2);
+    xbackground: lightgrey;
+    padding: 5px;
+    z-index: 100;
+    position: absolute;
+    right: 1.33em;
+    top: 0.55em;
+    font-size: x-large;
+    display: none;
+}
+        .row {
+            display: flex;
+        }
+
+        .column {
+            flex: 50%;
+        }
+        /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+        @media screen and (max-width: 600px) {
+            .column {
+                width: 100%;
+            }
+        }
