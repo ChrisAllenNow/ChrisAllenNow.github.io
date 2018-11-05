@@ -1,0 +1,40 @@
+﻿<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style\style.css">
+</head>
+<body>
+    <h1 class="menuLink">
+        <a href="#" onclick="ui.menuToggle();">&#8801; <span id="dTitle">Title</span></a>
+    </h1>
+    <div class="menuEdit" id="dMenuEdit">
+        <a href="#" onclick="view.menuDo('5');" title="edit">&#x270e</a>
+        <a href="#" onclick="view.menuDo('5');" title="insert items">+</a>
+        <a href="#" onclick="view.menuDo('5');" title="remove items">-</a>&nbsp;&nbsp;&nbsp; 
+        <a href="#" onclick="view.menuDo('3x');" title="cancel">&#x2718</a>
+        <a href="#" onclick="view.menuDo('3');" title="confirm">&#x2714</a>
+        </div>
+
+    <div class="menuEdit" id="dMenuMove">
+        <input type="radio" name="editList" id="rMove" value="move" checked="true" />
+        <label for="rMove">Move</label>
+        <input type="radio" name="edit List" id="rCopy" value="copy" />
+        <label for="rCopy">Copy</label>  <a href="#" onclick="view.menuDo('4');">&#x2714</a>
+    </div>
+
+    <div class="menu" id="dMenu"></div>
+    <div class="row">
+        <div class="column" id="dMain"></div>
+        <div class="column" id="dSpec"></div>
+    </div>
+
+    <xscript src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></xscript>
+    <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase-firestore.js"></script>
+    <script src="script\util.js"></script>
+    <script src="script\io.js"></script>
+    <script src="script\ui.js"></script>
+    <script src="productManager\model.js"></script>
+    <script src="productManager\view.js"></script>
+    <script src="productManager\control.js"></script>
+</body>
+</html>
