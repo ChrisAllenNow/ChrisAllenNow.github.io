@@ -1,11 +1,14 @@
 ﻿<html>
 <head>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
     <link rel="stylesheet" type="text/css" href="style\style.css">
 </head>
 <body>
     <h1 class="menuLink">
         <a href="#" onclick="ui.menuToggle();">&#8801; <span id="dTitle">Title</span></a>
+        <a href="#" onclick="ui.authToggle();">&#10084;</a>
     </h1>
+
     <div class="menuEdit" id="dMenuEdit">
         <a href="#" onclick="view.menuDo('5');" title="edit">&#x270e</a>
         <a href="#" onclick="view.menuDo('5');" title="insert items">+</a>
@@ -22,6 +25,12 @@
     </div>
 
     <div class="menu" id="dMenu"></div>
+    <div class="auth" id="dAuth">
+        <ul>
+            <li>Account</li>
+            <li><a  href="#" onclick="io.signOut();">Sign Out</a></li>
+        </ul>
+    </div>
     <div class="row">
         <div class="column" id="dMain"></div>
         <div class="column" id="dSpec"></div>
@@ -29,6 +38,8 @@
 
     <xscript src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></xscript>
     <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase-auth.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase-firestore.js"></script>
     <script src="script\util.js"></script>
     <script src="script\io.js"></script>

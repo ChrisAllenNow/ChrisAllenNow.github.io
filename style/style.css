@@ -10,6 +10,15 @@
             text-decoration: none; color:blue;
         }
 
+.auth {
+    background: lightgrey;
+    padding: 1.33em;
+    right:20px;
+    z-index: 100;
+    position: fixed;
+    display: none;
+}
+
 .menu {
     background: lightgrey;
     padding: 5px;

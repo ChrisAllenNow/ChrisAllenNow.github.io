@@ -1,0 +1,23 @@
+﻿<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style\style.css">
+    <link rel="stylesheet" type="text/css" href="style\styleLogin.css">
+</head>
+<body>
+    <div class="login">
+        <input type="text" placeholder="Email" id="email">
+        <input type="password" placeholder="password" id="password">
+        <a href="#" id="register" class="register">register</a>
+        <a href="#" id="forgot" class="forgot">forgot password?</a>
+        <input type="submit" value="Sign In" id="signIn">
+    </div>
+    <div class="shadow"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase-firestore.js"></script>
+    <script src="script\util.js"></script>
+    <script src="script\io.js"></script>
+    <script src="script\auth.js"></script>
+</body>
+</html>

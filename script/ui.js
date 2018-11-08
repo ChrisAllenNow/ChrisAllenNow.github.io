@@ -1,5 +1,14 @@
 function ui() { }
 
+ui.authToggle = function () {
+    var x = document.getElementById("dAuth");
+    if (x.style.display != "block") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+};
+
 ui.dragDrop = function () { };
 
 ui.dragDrop.end = function (tag) {
@@ -59,6 +68,7 @@ ui.outlineToggle = function (e) {
     } else {
         x.style.display = "none";
     }
+    event.preventDefault();
 };
 
 ui.opmlId = 0;
@@ -84,9 +94,8 @@ ui.showOpml = function (dest, nodes) {
     while (outline) {
         t = outline.attributes.getNamedItem("t");
         listItem = document.createElement("li");
-        listItem.id = ui.opmlId++;
         id = outline.attributes.getNamedItem("id");
-        if (id) listItem.id = id; else listItem.id=ui.opmlId++;
+        if (id) listItem.id = id.value; else listItem.id=ui.opmlId++;
         a = document.createElement("a");
         m = outline.attributes.getNamedItem("m");
         s = outline.attributes.getNamedItem("s");
@@ -94,12 +103,14 @@ ui.showOpml = function (dest, nodes) {
             a.href = "#";
             a.m = m.value;
             a.onclick = view.menuDo;
+            a.ontouchstart = view.menuDo;
         } else
         if (s)
             a.href = "productManager.htm?productSpec=" + s.value;
         else {
             a.href = "#";
             a.onclick = ui.outlineToggle;
+            a.ontouchstart = ui.outlineToggle;
         }
         a.innerHTML = t.value;
         t = outline.attributes.getNamedItem("b");

@@ -31,6 +31,7 @@ control.test = function () {
 
 control.test();
 window.onbeforeunload = io.flush;
+io.signIn();
 model.listen(control.onModelChanged);
 view.listen(control.onViewChanged);
 model.load(spec,prototypeSpec,productSpec);

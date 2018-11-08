@@ -59,7 +59,7 @@ view.update = function (entity, data) {
         case ("productSpec"):
             xml = util.xml.fromString(data);
             ui.showXml("dTitle", xml, "/opml/head/title", ui.showText);
-            ui.showXml("dMain", xml, "/opml/body/o", ui.showOpml);
+            ui.showXml("dMain", xml, "/opml/body/o/o", ui.showOpml);
             break;
             case ("prototypeSpec"):
             //var prototypeXml = util.xml.fromString(data);
