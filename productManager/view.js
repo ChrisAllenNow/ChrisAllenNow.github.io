@@ -43,6 +43,18 @@ view.menuDo = function (mPassed) {
             util.log("testing");
             view.x();
             break;
+        case "7": // test to remove!
+            util.log("settings");
+            view.x();
+            break;
+        case "8": // test to remove!
+            document.getElementById('dAbout').style.border = '.1em solid black';
+            document.getElementById('dAbout').style.display = "block";
+            util.status.report(document.getElementById('dAbout'));
+            break;
+        case "9": // sign out
+            io.signOut();
+            break;
         default:
             util.log2(m, "menu handle");
     }
@@ -55,6 +67,7 @@ view.update = function (entity, data) {
             xml = util.xml.fromString(data);
             ui.showXml("dSpec", xml, "/opml/body/o", ui.showOpml);
             ui.showXml("dMenu", xml, "/opml/body//o[@t='Product Features']/o", ui.showOpml);
+            ui.showXml("dAuth", xml, "/opml/body//o[@t='Information for Users']/o", ui.showOpml);
             break;
         case ("productSpec"):
             xml = util.xml.fromString(data);

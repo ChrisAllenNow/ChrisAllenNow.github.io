@@ -78,15 +78,16 @@ ui.showXml = function (div, xml, xpath, method) {
     var dest = document.getElementById(div);
     dest.innerHTML = "";
     var nodes = util.xml.filter(xml, xpath);
-    method(dest, nodes);
+    method(dest, nodes,true);
 };
 
 // todo id MUST be unique in html (might come from 2+ opml docs too)
-ui.showOpml = function (dest, nodes) {
+ui.showOpml = function (dest, nodes,open) {
     var a;
     var id;
     var listItem;
     var list = document.createElement("ul");
+    if (!open) list.style.display = "none";
     var m;
     var outline = nodes.iterateNext();
     var s;
@@ -115,15 +116,17 @@ ui.showOpml = function (dest, nodes) {
         a.innerHTML = t.value;
         t = outline.attributes.getNamedItem("b");
         if (t) a.title = t.value;
+        var openNext = outline.attributes.getNamedItem("open");
+        if (openNext && openNext.value == "false") openNext = false; else openNext = true;
         listItem.appendChild(a);
         list.appendChild(listItem);
-        ui.showOpml(listItem, util.xml.filter(outline, "o"));
+        ui.showOpml(listItem, util.xml.filter(outline, "o"),openNext);
         outline = nodes.iterateNext();
     }
     dest.appendChild(list);
 };
 
-ui.showText = function (dest, nodes) {
+ui.showText = function (dest, nodes,open) {
     var outline = nodes.iterateNext();
     dest.innerHTML = outline.innerHTML;
 };

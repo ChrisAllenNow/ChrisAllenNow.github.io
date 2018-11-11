@@ -1,7 +1,7 @@
 function util() { }
 
-util.assert = function (b) {
-    if (!b) console.log("test failed " + b);
+util.assert = function (b, message) {
+    util.status.log(b, 1, message);
 };
 
 util.log = function (o) {
@@ -23,9 +23,54 @@ util.scriptTest = function (dependencies) {
     var testOK = true;
     for (var i = 0;i<dependencies.length; i++) {
         if (!dependencies[i]) testOK= false;
-}
-    console.log("tested: " + testOK + " " + document.scripts[document.scripts.length - 1].src);
+    }
+    util.status.log(testOK, dependencies.length, document.scripts[document.scripts.length - 1].src);
 };
+
+util.status = function () { };
+
+util.status.log = function (b, count, message) {
+    if (!util.status.test[message])
+        util.status.test[message] = { times: 1, tests: count };
+    else
+        util.status.test[message].times++;
+    if (!b) view.menuDo("8");
+};
+util.status.report = function (element) {
+    //    https://stackoverflow.com/questions/8180296/what-information-can-we-access-from-the-client
+    util.status.reportOnce(element, window.location.pathname, "Path Name");
+    util.status.reportOnce(element, navigator.appName, "Browser");
+    util.status.reportOnce(element, navigator.product, "Engine");
+    util.status.reportOnce(element, navigator.appVersion, "Version");
+    util.status.reportOnce(element, navigator.userAgent, "User Agent");
+    util.status.reportOnce(element, navigator.language, "Language");
+    util.status.reportOnce(element, localStorage.length, "Cache Items");
+
+    var t = document.createElement("TABLE");
+    var row = t.insertRow(-1);
+    var cell0 = row.insertCell(0);
+    var cell1 = row.insertCell(1);
+    var cell2 = row.insertCell(2);
+    cell0.innerHTML = "Internal Tests";
+    cell1.innerHTML = "Number of Tests";
+    cell2.innerHTML = "Checks per Test";
+    Object.keys(util.status.test).forEach(function (key, index) {
+        var row = t.insertRow(-1);
+        var cell0 = row.insertCell(0);
+        var cell1 = row.insertCell(1);
+        var cell2 = row.insertCell(2);
+        cell0.innerHTML = key;
+        cell1.innerHTML = util.status.test[key].times;
+        cell2.innerHTML = util.status.test[key].tests;
+    });
+    element.appendChild(t);
+};
+util.status.reportOnce = function (element, what,label) {
+    var t = document.createElement("DIV");
+    t.innerHTML = label+" "+what;
+    element.appendChild(t);
+};
+util.status.test = {}; // {[times:x, tests:y]}
 
 util.xml = function () {
 };
@@ -67,6 +112,7 @@ util.xml.fromHtmlEach = function (xml,nodeLi) {
             };
         };
         if (nodeChild.tagName == "UL") {
+            if (nodeChild.style.display == "none") nodeDest.setAttribute("open", "false");
             for (var i2 = 0; i2 < nodeChild.children.length; i2++) {
                 if (nodeChild.children[i2].tagName == "LI") {
                     nodeDest.appendChild(util.xml.fromHtmlEach(xml, nodeChild.children[i2]));

@@ -4,10 +4,11 @@
     <link rel="stylesheet" type="text/css" href="style\style.css">
 </head>
 <body>
-    <h1 class="menuLink">
-        <a href="#" onclick="ui.menuToggle();">&#8801; <span id="dTitle">Title</span></a>
-        <a href="#" onclick="ui.authToggle();">&#10084;</a>
-    </h1>
+    <div class="menuTop">
+        <div class="menuToggle"><a href="#" onclick="ui.menuToggle();">&#8801;</a></div>
+        <div><h1 style="text-align:center" id="dTitle"></h1></div>
+        <div class="menuToggle"><a href="#" onclick="ui.authToggle();">&#9432;</a></div>
+    </div>
 
     <div class="menuEdit" id="dMenuEdit">
         <a href="#" onclick="view.menuDo('5');" title="edit">&#x270e</a>
@@ -25,12 +26,12 @@
     </div>
 
     <div class="menu" id="dMenu"></div>
-    <div class="auth" id="dAuth">
-        <ul>
-            <li>Account</li>
-            <li><a  href="#" onclick="io.signOut();">Sign Out</a></li>
-        </ul>
+    <div class="auth" id="dAuth"></div>
+
+    <div class="row">
+        <div class="column" id="dAbout" style="display:none;"></div>
     </div>
+
     <div class="row">
         <div class="column" id="dMain"></div>
         <div class="column" id="dSpec"></div>

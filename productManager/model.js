@@ -16,14 +16,13 @@ model.load = function (spec, prototypeSpec,productSpec) {
 };
 
 model.loadedProductSpec = function (d) {
-    util.assert(model.listener);
     model.opml = d.data.opml;
     model.listener("productSpec", model.opml);
     return d;
 };
 
 model.loadedSpec = function (d) {
-    util.assert(model.listener);
+    util.assert(model.listener,"Model needs a listener");
     model.listener("spec", d.data.opml);
     return d;
 };
