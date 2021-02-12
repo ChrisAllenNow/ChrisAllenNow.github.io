@@ -422,7 +422,7 @@ view.gallerySizeSet = function (num) {
         if (rc.rows > 3)
             rc = r(60);
     }
-    view.test1(); //todo emergency fix
+    //view.test1(); //todo emergency fix
     view.svgGallery.setAttributeNS(null, "height", rc.rows * rc.width * (1 + gap));
     return { num: num, cols: rc.cols, rows: rc.rows, width: rc.width, gap: gap };
 };
