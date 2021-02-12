@@ -84,11 +84,13 @@ model.load = function () {
     var key;
     key = { app: model.app, v: model.v, ds: "control" };
     model.control = io.cache.get(key);
+    //console.log(model.control);
     if (!model.control) model.control = {}; // todo set defaults
     model.listener("init", model.control.gNum);
     for (var i = 0; i < model.control.gNum; i++) {
         key = { app: model.app, v: model.v, ds: "defs", seq: i };
         graphic = io.cache.get(key);
+        //console.log(graphic);
         graphic.seq = i;
         if (!(graphic.svg.substring(0, 7)=="<filter"))
             model.listener("gShow", graphic);
