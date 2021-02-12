@@ -1,0 +1,337 @@
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        @media print {
+            .noPrint {
+                display: none;
+            }
+        }
+        .galleryText {
+            font: medium bolder serif;
+            fill: red;
+            font-size:4em;
+            border:0;padding:0;margin:0;
+        }
+    </style>
+</head>
+<body onresize="model.load();">
+    <div class="noPrint">
+        mode: <a href="#" id="iMode" onclick="view.modeNext();"></a>
+
+        | <a href="#" id="iSvg" onclick="view.divOpen('dSvg');">svg</a>
+        | <a href="#" id="iGallery" onclick="view.divOpen('dGallery');">gallery</a>
+        | <a href="#" id="iColors" onclick="view.divOpen('dColors');">colors</a>
+        | <a href="#" id="iColors2" onclick="view.divOpen('dColors2');">colors2</a>
+        | <a href="#" id="iLight" onclick="view.divOpen('dLight');">light</a>
+        | <a href="#" id="iLights" onclick="view.divOpen('dLights');">lights</a>
+        | <a href="#" id="iFilter" onclick="view.divOpen('dFilter');">filter</a>
+        | <a href="#" id="iFilters" onclick="view.divOpen('dFilters');">filters</a>
+        | <a href="#" id="iCatalog" onclick="view.divOpen('dCatalog');">catalog</a>
+    </div>
+    <div id="dSvg" style="display:none">
+        <form id="form1">
+            <textarea id="txtSvg" cols="128" rows="8"></textarea>
+            <button onclick="view.graphicUpdate('text');">Update</button>
+        </form>
+    </div>
+
+    <div id="dGallery" style="width:100vw;">
+        <svg id="svgGallery" width="100%" height="120" preserveAspectRatio="xMidYMid meet">
+            <defs>            </defs>
+            <filter id="blurMe">
+                <feGaussianBlur stdDeviation="5" />
+            </filter>
+            <filter id="drag">
+                <feGaussianBlur stdDeviation="3" />
+                <xxfeTurbulence baseFrequency=".05,.004" width="200%" height="200%" top="-50%" type="fractalNoise" numOctaves="4" seed="0" result="FRACTAL-TEXTURE_10" />
+                <xxfeComposite in="COLOR-red" in2="BEVEL_30" operator="in" result="BEVEL_40" />
+                <xxfeFlood flood-color="#582D1B" result="COLOR-red" />
+                <xxfeOffset dx="4" dy="4" in="BEVEL_20" result="BEVEL_30" />
+                <xxfeMorphology operator="erode" radius="4" in="SourceAlpha" result="BEVEL_10" opacity="20%" />
+            </filter>
+        </svg>
+    </div>
+
+    <div id="dColors" style="display:none">
+        <form id="TheForm2">
+            Color | Opacity | Stroke Color | Stroke Width<br />
+            <input id="inputColor" type="color" onchange="view.hack('fill',inputColor.value);" />
+            <input id="inputOpacity" type="range" min="0" max="1" step=".05" onchange="view.hack('opacity',inputOpacity.value);" />
+            <input id="inputStrokeColor" type="color" onchange="view.hack('stroke',inputStrokeColor.value);" />
+            <input id="inputStrokeWidth" type="range" min="0" max="3" step=".01" onchange="view.hack('stroke-width',''+inputStrokeWidth.value+'%');" />
+        </form>
+    </div>
+
+    <div id="dFilter" style="display:none">
+        <form id="frm2  ">
+            Blur?<input id="bBlur" type="checkbox" value="true"
+                        onchange="view.hackFilter2('bBlur',bBlur.value);" />
+            Source <select id="in" onchange="view.hackFilter('feGaussianBlur',this.id);">
+                <option value="sourceAlpha">sourceAlpha</option>
+                <option value="sourceGraphic">sourceGraphic</option>
+            </select>
+            Std Deviation
+            <input id="stdDeviation" type="range" min="0" max="20" step=".1"
+                   onchange="view.hackFilter('feGaussianBlur',this.id);" />
+            <br />
+
+            Turbulence?
+            <input id="bTurbulence" type="checkbox" value="true"
+                   onchange="view.hackFilter2('bTurbulence',bTurbulence.value);" />
+            Type <select id="type" onchange="view.hackFilter('feTurbulence',this.id);">
+                <option value="fractalNoise">fractalNoise</option>
+                <option value="turbulence">turbulence</option>
+            </select>
+            Base Frequency
+            <input id="baseFrequency" type="range" min="0" max="2" step=".001"
+                   onchange="view.hackFilter('feTurbulence',this.id);" />
+            Seed
+            <input id="seed" type="range" min="1" max="10" step="1"
+                   onchange="view.hackFilter('feTurbulence',this.id);" />
+            Octaves
+            <input id="numOctaves" type="range" min="1" max="6" step="1"
+                   onchange="view.hackFilter('feTurbulence',this.id);" />
+            <br />
+
+            Morphology?<input id="bMorphology" type="checkbox" value="true"
+                              onchange="view.hackFilter2('bMorphology');" />
+            Source <select id="operator" onchange="view.hackFilter('feMorphology',this.id);">
+                <option value="erode">erode</option>
+                <option value="dilate">dilate</option>
+            </select>
+            Radius
+            <input id="radius" type="range" min="0" max="20" step="1"
+                   onchange="view.hackFilter('feMorphology',this.id);" />
+            <br />
+
+            Tile?<input id="bTile" type="checkbox" value="true"
+                        onchange="view.hackFilter2('bTile');" />
+            Width
+            <input id="width" type="range" min="0" max="20" step="1"
+                   onchange="view.hackFilter('feTile',this.id);" />
+            Height<input id="height" type="range" min="0" max="20" step="1"
+                         onchange="view.hackFilter('feTile',this.id);" />
+            <br />
+
+            Displacement?<input id="bDisplacementMap" type="checkbox" value="true"
+                                onchange="view.hackFilter2('bDisplacementMap');" />
+            X channel <select id="xChannelSelector" onchange="view.hackFilter('feDisplacementMap',this.id);">
+                <option value="R">R</option>
+                <option value="G">G</option>
+                <option value="B">B</option>
+                <option value="A">A</option>
+            </select>
+            Y channel <select id="yChannelSelector" onchange="view.hackFilter('feDisplacementMap',this.id);">
+                <option value="R">R</option>
+                <option value="G">G</option>
+                <option value="B">B</option>
+                <option value="A">A</option>
+            </select>
+            Scale
+            <input id="scale" type="range" min="0" max="50" step="1"
+                   onchange="view.hackFilter('feDisplacementMap',this.id);" />
+            <br />
+
+            Composite?<input id="bComposite" type="checkbox" value="true"
+                             onchange="view.hackFilter2('bComposite');" />
+            Operator <select id="operator2" onchange="view.hackFilter('feComposite',this.id);">
+                <option value="over">over</option>
+                <option value="in">in</option>
+                <option value="out">out</option>
+                <option value="atop">atop</option>
+                <option value="xor">xor</option>
+                <option value="lighter">lighter</option>
+                <option value="arithmetic">arithmetic</option>
+            </select>
+            <br />
+
+
+        </form>
+    </div>
+
+    <div id="dColors2" style="display:none"><svg width="100%"></svg></div>
+
+    <div id="dLight" style="display:none">
+        <form id="frmLight">
+            Specular?<input id="bSpecular" type="checkbox" value="true"
+                            onchange="view.hackFilter2('bSpecular',bSpecular.value);" />
+            specular exponent
+            <input id="specularExponent" type="range" min="0" max="20" step="1"
+                   onchange="view.hackFilter('feSpecularLighting',this.id);" />
+            surface scale
+            <input id="surfaceScale" type="range" min="0" max="20" step="1"
+                   onchange="view.hackFilter('feSpecularLighting',this.id);" />
+            specular constant
+            <input id="specularConstant" type="range" min="0" max="10" step=".5"
+                   onchange="view.hackFilter('feSpecularConstant',this.id);" />
+            lighting-color
+            <input id="lighting-color" type="color"
+                   onchange="view.hackFilter('feSpecularLighting',this.id);" />
+            <br />
+
+            Spot Light?
+            <input id="bSpotLight" type="checkbox" value="true"
+                   onchange="view.hackFilter2('bSpotLight',bSpotLight.value);" />
+            x
+            <input id="x" type="range" min="0" max="200" step="1"
+                   onchange="view.hackFilter('feSpotLight',this.id);" />
+            y
+            <input id="y" type="range" min="0" max="200" step="1"
+                   onchange="view.hackFilter('feSpotLight',this.id);" />
+            z
+            <input id="z" type="range" min="0" max="200" step="1"
+                   onchange="view.hackFilter('feSpotLight',this.id);" />
+
+            pointsAtX
+            <input id="pointsAtX" type="range" min="0" max="200" step="1"
+                   onchange="view.hackFilter('feSpotLight',this.id);" />
+            pointsAtY
+            <input id="pointsAtY" type="range" min="0" max="200" step="1"
+                   onchange="view.hackFilter('feSpotLight',this.id);" />
+            pointsAtZ
+            <input id="pointsAtZ" type="range" min="0" max="200" step="1"
+                   onchange="view.hackFilter('feSpotLight',this.id);" />
+
+            specular exponent
+            <input id="specularExponent" type="range" min="0" max="20" step="1"
+                   onchange="view.hackFilter('feSpotLight',this.id);" />
+            limiting cone angle
+            <input id="limitingConeAngle" type="range" min="0" max="360" step="2.5"
+                   onchange="view.hackFilter('feSpotLight',this.id);" />
+
+            <br />
+
+            Point Light?
+            <input id="bPointLight" type="checkbox" value="true"
+                   onchange="view.hackFilter2('bPointLight',bPointLight.value);" />
+            x
+            <input id="x" type="range" min="0" max="200" step="1"
+                   onchange="view.hackFilter('fePointLight',this.id);" />
+            y
+            <input id="y" type="range" min="0" max="200" step="1"
+                   onchange="view.hackFilter('fePointLight',this.id);" />
+            z
+            <input id="z" type="range" min="0" max="200" step="1"
+                   onchange="view.hackFilter('fePointLight',this.id);" />
+
+            <br />
+
+            Distant Light?
+            <input id="bDistantLight" type="checkbox" value="true"
+                   onchange="view.hackFilter2('bDistantLight',bDistantLight.value);" />
+            azimuth
+            <input id="azimuth" type="range" min="0" max="360" step="2.5"
+                   onchange="view.hackFilter('feDistantLight',this.id);" />
+            elevation
+            <input id="elevation" type="range" min="0" max="360" step="2.5"
+                   onchange="view.hackFilter('feDistantLight',this.id);" />
+
+        </form>
+    </div>
+
+    <div id="dLights" style="display:none"><svg width="100%"></svg></div>
+    <div id="dFilters" style="display:none"><svg width="100%"></svg></div>
+    <div id="dCatalog" style="display:none">
+        <button onclick="view.test1();">Clear local storage</button>
+        <button onclick="view.abc();">Effects</button>
+        <input type="file" id="file-selector" onchange=view.testOpen2(event) accept=".svg">
+        <button onclick="view.testSave();">Test save</button>
+        <button onclick="view.listener('save',svgGallery.getElementsByTagName('defs'));">Save</button>
+        <button onclick="svg.defsShow();view.listener('restore',svgGallery.getElementsByTagName('defs'));">Restore</button>
+    </div>
+
+    <hr class="noPrint" />
+
+    <svg id="svgPenOuter" width="100%" height="1000"
+         preserveAspectRatio="xMidYMid meet">
+
+        <filter id="demo2">
+
+            <feSpecularLighting result="spec3" in="SourceGraphic" specularConstant="1.2" specularExponent="4" lighting-color="#FFF">
+                <!--Light source effect-->
+                <feSpotLight x="50" y="50" z="200" pointsAtX="600" pointsAtY="150" pointsAtZ="1" limitingConeAngle="8" />
+            </feSpecularLighting>
+            <!--Composition of inputs-->
+            <feComposite in="SourceGraphic" in2="spec3" result="spec4" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+
+            <!--Lighting effect-->
+            <feSpecularLighting result="spec23" in="SourceGraphic" specularConstant="1.2" specularExponent="7" lighting-color="#f22">
+                <!--Light source effect-->
+                <feSpotLight x="400" y="400" z="900" pointsAtX="700" xpointsAtY="500" xointsAtZ="0" limitingConeAngle="9" />
+            </feSpecularLighting>
+            <!--Composition of inputs-->
+            <feComposite in="SourceGraphic" in2="spec23" result="spec24" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+
+            <feComposite in="spec4" in2="spec24" result="spec55" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+
+        </filter>
+
+        <filter id="demo3">
+            <!--Blur effect-->
+            <feGaussianBlur stdDeviation="10" result="blur3" />
+            <!--Lighting effect-->
+            <feSpecularLighting result="spec3" in="blur3" specularConstant="1.2" specularExponent="7" lighting-color="#FFF">
+                <!--Light source effect-->
+                <feSpotLight x="400" y="400" z="900" limitingConeAngle="9" />
+            </feSpecularLighting>
+            <!--Composition of inputs-->
+            <feComposite in="SourceGraphic" in2="spec3" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+        </filter>
+
+        <filter id="lightMe1">
+            <feDiffuseLighting in="SourceGraphic" result="light"
+                               lighting-color="white">
+                <fePointLight x="150" y="60" z="60" />
+            </feDiffuseLighting>
+
+            <feComposite in="SourceGraphic" in2="light"
+                         operator="arithmetic" k1="1" k2="0" k3="0" k4="0" />
+        </filter>
+
+        <filter id="lightMe2">
+            <feDiffuseLighting diffuseConstant="20" in="SourceGraphic" result="light2"
+                               lighting-color="white">
+
+                <feSpotLight x="10" y="10" z="5" pointsAtX="100" pointsAtY="70" limitingConeAngle="9" />
+                <fePointLight x="150" y="60" z="60" />
+                <fePointLight x="150" y="60" z="60" />
+            </feDiffuseLighting>
+
+            <feComposite in="SourceGraphic" in2="light2"
+                         operator="arithmetic" k1="1" k2="0" k3="0" k4="0" />
+        </filter>
+
+        <filter id="spotLight1" x="0" y="0" width="100%" height="100%">
+            <feDiffuseLighting diffuseConstant="20" in="SourceGraphic" result="light2">
+                <feSpotLight x="10" y="10" z="5" pointsAtX="100" pointsAtY="70" limitingConeAngle="9" />
+            </feDiffuseLighting>
+
+            <feComposite in="SourceGraphic" in2= ="light2" result="light3"
+                         operator="arithmetic" k1="1" k2="1" k3="1" k4="0" />
+
+            <feDiffuseLighting in="light3" result="light4"
+                               lighting-color="white" operator="arithmetic" k1="1" k2="1" k3="1" k4="0">
+                <fePointLight x="150" y="60" z="60" />
+                <fePointLight x="400" y="90" z="40" />
+            </feDiffuseLighting>
+
+            <feComposite in="SourceGraphic" in2="light4"
+                         operator="arithmetic" k1="1" k2="1" k3="1" k4="0" />
+        </filter>
+        <svg id="svgPen" width="100%" height="100%"
+             preserveAspectRatio="xMidYMid meet" xfilter=" url(#demo2)">
+        </svg>
+    </svg>
+
+    <script src="util.js"></script>
+    <script src="io.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="graphic.js"></script>
+    <script src="model.js"></script>
+    <script src="sculpt.js"></script>>
+    <script src="view.js"></script>
+    <script src="controlFree.js"></script>
+</body>
+</html>
